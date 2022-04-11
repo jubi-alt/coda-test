@@ -1,0 +1,157 @@
+openapi: 3.0.1
+info:
+  version: 1.0.0
+  title: coda-test
+  description: coda-test
+paths:
+  /csv/upload:
+    post:
+      operationId: uploadFile
+      summary: Upload a file to S3 bucket
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/UploadFileRequest"
+            encoding:
+              filePath:
+                contentType: file/csv
+      responses:
+        "200":
+          description: successful
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UploadFileResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "422":
+         $ref: "#/components/responses/Unprocessable"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+  /csv/process:
+    post:
+      operationId: processCsvFile
+      summary: Process a file from S3 bucket
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProcessFileRequest"
+      responses:
+        "200":
+          description: successful
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProcessFileResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "422":
+          $ref: "#/components/responses/Unprocessable"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+components:
+  schemas:
+    UploadFileRequest:
+      type: object
+      additionalProperties: false
+      required:
+        - filePath
+      properties:
+        filePath:
+          type: string
+          format: binary
+    UploadFileResponse:
+      type: object
+      required:
+        - s3Path
+      properties:
+        s3Path:
+          type: string
+    ProcessFileRequest:
+      type: object
+      additionalProperties: false
+      required:
+        - filename
+      properties:
+        filename:
+          type: string
+          required: true
+    ProcessFileResponse:
+      type: object
+      required:
+        - filename
+        - outputFilename
+        - fields
+        - values
+      properties:
+        filename:
+          type: string
+        outputFilename:
+          type: string
+        fields:
+          type: object
+        values:
+          type: array
+          items:
+            type: object
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+          description: An application-specific error code expressed as a string value.
+        message:
+          type: string
+          description: Desc
+        details:
+            type: array
+            items:
+              type: string
+            description:
+              An array containing information about the error.
+  responses:
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'       
+    Unprocessable:
+      description: Unprocessable entity
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'                
+    BadRequest:
+      description: Invalid request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+        description: The specified resource was not found
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Error'
+    InternalServerError:
+      description: Unexpected error occurred
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  parameters:
+    requestId:
+      name: request-reference-number
+      in: header
+      required: true
+      schema:
+        type: string

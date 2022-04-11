@@ -1,0 +1,25 @@
+{
+  "extends": "@tsconfig/node16/tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "baseUrl": ".",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+  },
+  "lib": [
+    "dom",
+    "es2015.promise",
+    "es2017",
+    "esnext.asynciterable"
+  ],
+  "exclude": [
+    "node_modules",
+    "./test/**/*.spec.ts",
+  ],
+  "include": [
+    "./.eslintrc.js",
+    "./jest.config.js",
+    "./src/**/*.ts",
+    "./src/**/swagger.yaml",
+  ]
+}
