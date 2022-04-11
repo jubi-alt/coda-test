@@ -3,7 +3,7 @@ import mongoose from 'mongoose'
 export interface IReference {
   _id: string,
   uuid: string,
-  fileName: string,
+  filename: string,
   fields: object,
   values: any
 }
@@ -14,7 +14,7 @@ const schema = new mongoose.Schema<IReference>({
     unique: true,
     required: true,
   },
-  fileName: {
+  filename: {
     type: String,
     unique: true,
     required: true,
@@ -23,7 +23,7 @@ const schema = new mongoose.Schema<IReference>({
     type: Object
   },
   values: {
-    type: mongoose.Schema.Types.Mixed
+    type: Array
   }
 })
 

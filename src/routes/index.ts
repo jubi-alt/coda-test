@@ -1,7 +1,7 @@
 import path from 'path'
 import multer from 'multer'
 import { Router } from 'express'
-import * as references from './references'
+import * as csv from './csv'
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -15,5 +15,6 @@ const storage = multer.diskStorage({
 const upload = multer({ storage })
 
 export const setupRoutes = (router: Router) => {
-  router.post('/csv/upload', upload.single('file'), references.uploadFile)
+  router.post('/csv/upload', upload.single('file'), csv.upload)
+  router.post('/csv/process', csv.process)
 }

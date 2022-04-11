@@ -98,7 +98,7 @@ components:
           type: string
         fields:
           type: object
-        values:
+        results:
           type: array
           items:
             type: object
